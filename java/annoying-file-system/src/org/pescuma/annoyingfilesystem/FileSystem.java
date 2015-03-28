@@ -1,7 +1,11 @@
 package org.pescuma.annoyingfilesystem;
 
+import java.util.List;
+
 public interface FileSystem {
 	
-	Path CreatePath(String path);
+	Path createPath(String path);
+	
+	List<Path> getRoots();
 	
 }

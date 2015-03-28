@@ -1,5 +1,7 @@
 package org.pescuma.annoyingfilesystem;
 
+import java.util.List;
+
 public interface Path {
 	
 	String getFullPath();
@@ -18,11 +20,9 @@ public interface Path {
 	
 	boolean canAddChild();
 	
-	Iterable<Path> getChildren();
+	List<Path> getChildren();
 	
 	Path getChild(String... names);
-	
-	Path createChild(String name);
 	
 	boolean exists();
 	
@@ -37,4 +37,10 @@ public interface Path {
 	void createParentFolder();
 	
 	PathAttributes getAttributes();
+	
+	boolean isRoot();
+	
+	Path getParent();
+	
+	boolean equals(Path other);
 }
