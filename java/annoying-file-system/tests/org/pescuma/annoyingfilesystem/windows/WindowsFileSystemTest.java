@@ -174,4 +174,60 @@ public class WindowsFileSystemTest {
 		Path path = fs.createPath("c:/a/b");
 		assertEquals("C:\\a\\b", path.getFullPath());
 	}
+	
+	@Test
+	public void validateRootC() {
+		assertNull(fs.validateRoot("C:"));
+	}
+	
+	@Test
+	public void validateRootCaseInsensitive() {
+		assertNull(fs.validateRoot("c:"));
+	}
+	
+	@Test
+	public void validateRootWithSlash() {
+		assertNull(fs.validateRoot("C:\\"));
+	}
+	
+	@Test
+	public void validateRootWithTwoLetters() {
+		assertNotNull(fs.validateRoot("CD:"));
+	}
+	
+	@Test
+	public void validateRootNoColon() {
+		assertNotNull(fs.validateRoot("C"));
+	}
+	
+	@Test
+	public void validateRootDoubleColon() {
+		assertNotNull(fs.validateRoot("C::"));
+	}
+	
+	@Test
+	public void validateFileNameNoExtension() {
+		assertNull(fs.validateFileName("ab"));
+	}
+	
+	@Test
+	public void validateFileNameWithExtension() {
+		assertNull(fs.validateFileName("ab"));
+	}
+	
+	@Test
+	public void validateFileNameIsNotRoot() {
+		assertNotNull(fs.validateFileName("C:"));
+	}
+	
+	@Test
+	public void validateFileNameIsNotEmpty() {
+		assertNotNull(fs.validateFileName(""));
+	}
+	
+	@Test
+	public void validateFileNameIsNotReserved() {
+		assertNotNull(fs.validateFileName("."));
+		assertNotNull(fs.validateFileName(".."));
+	}
 }
