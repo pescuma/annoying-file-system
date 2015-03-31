@@ -26,5 +26,6 @@ public interface Path {
 	
 	void createParentFolders();
 	
-	boolean equals(Path other);
+	@Override
+	boolean equals(Object other);
 }

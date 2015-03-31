@@ -137,14 +137,7 @@ public class WindowsPath implements Path {
 		if (getClass() != obj.getClass())
 			return false;
 		WindowsPath other = (WindowsPath) obj;
-		if (!path.equalsIgnoreCase(other.path))
-			return false;
-		return true;
-	}
-	
-	@Override
-	public boolean equals(Path other) {
-		return equals((Object) other);
+		return path.equalsIgnoreCase(other.path);
 	}
 	
 	@Override
