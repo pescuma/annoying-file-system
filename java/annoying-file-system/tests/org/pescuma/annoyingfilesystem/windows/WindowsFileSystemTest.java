@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.pescuma.annoyingfilesystem.Path;
-import org.pescuma.annoyingfilesystem.windows.WindowsFileSystem;
 
 public class WindowsFileSystemTest {
 	
@@ -87,5 +86,23 @@ public class WindowsFileSystemTest {
 	@Test
 	public void getRootsIsNotEmpty() {
 		assertNotNull(!fs.getRoots().isEmpty());
+	}
+	
+	@Test
+	public void getParentOfRoot() {
+		Path path = fs.createPath("c:\\");
+		assertNull(path.getParent());
+	}
+	
+	@Test
+	public void getParentOfFile() {
+		Path path = fs.createPath("c:\\abc");
+		assertEquals("C:\\", path.getParent().getFullPath());
+	}
+	
+	@Test
+	public void getParentOfFileInsideFolder() {
+		Path path = fs.createPath("c:\\abc\\dde.e");
+		assertEquals("C:\\abc", path.getParent().getFullPath());
 	}
 }
