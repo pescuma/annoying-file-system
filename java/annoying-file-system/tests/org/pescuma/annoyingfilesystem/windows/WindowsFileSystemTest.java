@@ -1,6 +1,8 @@
 package org.pescuma.annoyingfilesystem.windows;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -84,6 +86,12 @@ public class WindowsFileSystemTest {
 	}
 	
 	@Test
+	public void getFullPathWithoutSlashInTheEnd() {
+		Path path = fs.createPath("c:\\abc\\bb\\");
+		assertEquals("C:\\abc\\bb", path.getFullPath());
+	}
+	
+	@Test
 	public void getRootsIsNotEmpty() {
 		assertNotNull(!fs.getRoots().isEmpty());
 	}
@@ -104,5 +112,66 @@ public class WindowsFileSystemTest {
 	public void getParentOfFileInsideFolder() {
 		Path path = fs.createPath("c:\\abc\\dde.e");
 		assertEquals("C:\\abc", path.getParent().getFullPath());
+	}
+	
+	@Test
+	public void getSimpleChildOfRoot() {
+		Path path = fs.createPath("c:");
+		assertEquals("C:\\a", path.getChild("a").getFullPath());
+	}
+	
+	@Test
+	public void getDoubleSimpleChildOfRoot() {
+		Path path = fs.createPath("c:");
+		assertEquals("C:\\a\\x.y", path.getChild("a", "x.y").getFullPath());
+	}
+	
+	@Test
+	public void getComplexChildOfRoot() {
+		Path path = fs.createPath("c:");
+		assertEquals("C:\\a\\x.y", path.getChild("a\\x.y").getFullPath());
+	}
+	
+	@Test
+	public void getRelativeChildOfRoot() {
+		Path path = fs.createPath("c:");
+		assertEquals("C:\\b\\x.y", path.getChild("a\\..\\b\\x.y").getFullPath());
+	}
+	
+	@Test
+	public void getComplexRelativeChildOfRoot() {
+		Path path = fs.createPath("c:");
+		assertEquals("C:\\b\\t", path.getChild("a\\..\\b\\x.y", "\\..\\t").getFullPath());
+	}
+	
+	@Test
+	public void simpleEquals() {
+		assertEquals(true, fs.createPath("c:\\a").equals(fs.createPath("c:\\a")));
+	}
+	
+	@Test
+	public void simpleNotEquals() {
+		assertEquals(false, fs.createPath("c:\\a").equals(fs.createPath("c:\\b")));
+	}
+	
+	@Test
+	public void equalsIgnoreCase() {
+		assertEquals(true, fs.createPath("c:\\a").equals(fs.createPath("C:\\A")));
+	}
+	
+	@Test
+	public void equalsIgnoreSlashAtEnd() {
+		assertEquals(true, fs.createPath("c:\\a").equals(fs.createPath("c:\\a\\")));
+	}
+	
+	@Test
+	public void equalsIgnoreSlashAtEndInRoot() {
+		assertEquals(true, fs.createPath("c:").equals(fs.createPath("c:\\")));
+	}
+	
+	@Test
+	public void handleIncorrectSlashes() {
+		Path path = fs.createPath("c:/a/b");
+		assertEquals("C:\\a\\b", path.getFullPath());
 	}
 }

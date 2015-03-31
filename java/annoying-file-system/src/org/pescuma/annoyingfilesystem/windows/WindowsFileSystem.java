@@ -10,34 +10,49 @@ import org.pescuma.annoyingfilesystem.Path;
 
 public class WindowsFileSystem implements FileSystem {
 	
+	public static final String[] pathValidations = new String[] {
+			"It must start with a driver leter and a :", "It must have folders separated by \\",
+			"It can not have a empty folder name", "The folders can not be named . or .." };
+	
+	public static final char[] fileNameInvalidChars = new char[] { '\\', '/', ':', '*', '?', '"',
+			'<', '>', '|' };
+	
+	public static final char separator = '\\';
+	
 	@Override
-	public Path createPath(String path) {
+	public WindowsPath createPath(String path) {
 		
 		if (path.length() < 2 || path.charAt(1) != ':' || !Character.isLetter(path.charAt(0)))
 			throw new InvalidWindowsPathException(path);
 		
+		path = path.replace('/', separator);
+		
 		if (path.length() > 2) {
-			if (path.charAt(2) != '\\')
+			if (path.charAt(2) != separator)
 				throw new InvalidWindowsPathException(path);
 			
-			if (path.indexOf("\\\\") >= 0)
+			if (path.indexOf(Character.toString(separator) + separator) >= 0)
 				throw new InvalidWindowsPathException(path);
+			
 		} else {
-			path += "\\";
+			path += separator;
 		}
 		
 		path = getCanonical(path);
 		
-		WindowsPath result = new WindowsPath(path.substring(0, 3));
-		
 		if (path.length() > 3) {
-			if (path.endsWith("\\"))
+			// TODO Keep this info?
+			if (path.endsWith(Character.toString(separator)))
 				path = path.substring(0, path.length() - 1);
 			
-			result = result.getChild(path.substring(3).split("\\\\"));
+			String insideRoot = path.substring(3);
+			for (char c : fileNameInvalidChars)
+				if (c != separator)
+					if (insideRoot.indexOf(c) >= 0)
+						throw new InvalidWindowsPathException(path);
 		}
 		
-		return result;
+		return new WindowsPath(this, path);
 	}
 	
 	private String getCanonical(String path) {
@@ -53,7 +68,7 @@ public class WindowsFileSystem implements FileSystem {
 	public List<Path> getRoots() {
 		List<Path> result = new ArrayList<Path>();
 		for (File file : File.listRoots())
-			result.add(new WindowsPath(file.getAbsolutePath()));
+			result.add(new WindowsPath(this, file.getAbsolutePath()));
 		return result;
 	}
 }
