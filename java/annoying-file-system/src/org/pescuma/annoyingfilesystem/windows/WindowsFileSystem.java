@@ -19,32 +19,28 @@ public class WindowsFileSystem implements FileSystem {
 	public static final char[] fileNameInvalidChars = new char[] { '\\', '/', ':', '*', '?', '"',
 			'<', '>', '|' };
 	
-	public static final char separator = '\\';
-	
 	@Override
 	public WindowsPath createPath(String path) {
 		
 		if (path.length() < 2)
 			throw new InvalidWindowsPathException(path);
 		
-		path = path.replace('/', separator);
-		
-		String separatorAsString = Character.toString(separator);
+		path = path.replace('/', '\\');
 		
 		if (path.length() > 2) {
-			if (path.charAt(2) != separator)
+			if (path.charAt(2) != '\\')
 				throw new InvalidWindowsPathException(path);
 			
-			if (path.indexOf(separatorAsString + separator) >= 0)
+			if (path.indexOf("\\\\") >= 0)
 				throw new InvalidWindowsPathException(path);
 			
 		} else {
-			path += separator;
+			path += '\\';
 		}
 		
 		path = getCanonical(path);
 		
-		String[] fileNames = path.split(separatorAsString + separator);
+		String[] fileNames = path.split("\\\\");
 		
 		if (validateRoot(fileNames[0]) != null)
 			throw new InvalidWindowsPathException(path);
@@ -55,7 +51,7 @@ public class WindowsFileSystem implements FileSystem {
 		}
 		
 		// TODO Keep this info?
-		if (path.length() > 3 && path.endsWith(separatorAsString))
+		if (path.length() > 3 && path.endsWith("\\"))
 			path = path.substring(0, path.length() - 1);
 		
 		return new WindowsPath(this, path);
@@ -73,8 +69,10 @@ public class WindowsFileSystem implements FileSystem {
 	@Override
 	public List<Path> getRoots() {
 		List<Path> result = new ArrayList<Path>();
+		
 		for (File file : File.listRoots())
 			result.add(new WindowsPath(this, file.getAbsolutePath()));
+		
 		return result;
 	}
 	
@@ -84,7 +82,7 @@ public class WindowsFileSystem implements FileSystem {
 				|| name.charAt(1) != ':')
 			return pathValidations[0];
 		
-		if (name.length() == 3 && name.charAt(2) != separator)
+		if (name.length() == 3 && name.charAt(2) != '\\')
 			return pathValidations[1];
 		
 		return null;
@@ -103,7 +101,7 @@ public class WindowsFileSystem implements FileSystem {
 		
 		for (char c : fileNameInvalidChars)
 			if (name.indexOf(c) >= 0)
-				return "Path can not contain a " + c;
+				return "It can not contain a " + c;
 		
 		return null;
 	}

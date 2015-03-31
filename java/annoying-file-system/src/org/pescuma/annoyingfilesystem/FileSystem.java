@@ -4,8 +4,19 @@ import java.util.List;
 
 public interface FileSystem {
 	
+	/**
+	 * Creates a new path from a absolute path name.
+	 * 
+	 * The file or folder does not need to exist. It just need to be a valid name.
+	 * 
+	 * @return Never null
+	 * @throws InvalidPathException if path is an invalid name
+	 */
 	Path createPath(String path);
 	
+	/**
+	 * @return At least 1 element
+	 */
 	List<Path> getRoots();
 	
 	/**

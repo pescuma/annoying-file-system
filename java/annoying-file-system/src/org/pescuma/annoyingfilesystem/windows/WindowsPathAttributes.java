@@ -98,7 +98,7 @@ public class WindowsPathAttributes implements PathAttributes {
 	}
 	
 	@Override
-	public long size() {
+	public long getSize() {
 		if (attributes == null)
 			return 0;
 		

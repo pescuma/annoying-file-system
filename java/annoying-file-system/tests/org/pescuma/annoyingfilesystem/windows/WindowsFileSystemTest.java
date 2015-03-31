@@ -145,6 +145,12 @@ public class WindowsFileSystemTest {
 	}
 	
 	@Test
+	public void getChildWithLotsOfSlashes() {
+		Path path = fs.createPath("c:");
+		assertEquals("C:\\a\\b", path.getChild("\\a\\", "\\b\\").getFullPath());
+	}
+	
+	@Test
 	public void simpleEquals() {
 		assertEquals(true, fs.createPath("c:\\a").equals(fs.createPath("c:\\a")));
 	}

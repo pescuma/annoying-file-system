@@ -85,24 +85,28 @@ public class WindowsPath implements Path {
 	public WindowsPath getChild(String name, String... relativeNames) {
 		StringBuilder childPath = new StringBuilder();
 		
-		if (path.endsWith("\\"))
-			childPath.append(path.substring(0, path.length() - 1));
-		else
-			childPath.append(path);
+		childPath.append(path);
 		
-		if (!name.startsWith("\\"))
-			childPath.append("\\");
-		
+		fixMiddleSlash(childPath, name);
 		childPath.append(name);
 		
 		for (String rn : relativeNames) {
-			if (!rn.startsWith("\\"))
-				childPath.append("\\");
-			
+			fixMiddleSlash(childPath, rn);
 			childPath.append(rn);
 		}
 		
 		return fs.createPath(childPath.toString());
+	}
+	
+	private void fixMiddleSlash(StringBuilder childPath, String name) {
+		boolean prevHasSlash = childPath.charAt(childPath.length() - 1) == '\\';
+		boolean nextHasSlash = name.startsWith("\\");
+		
+		if (prevHasSlash && nextHasSlash)
+			childPath.deleteCharAt(childPath.length() - 1);
+		
+		else if (!prevHasSlash && !nextHasSlash)
+			childPath.append("\\");
 	}
 	
 	@Override
