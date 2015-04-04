@@ -8,8 +8,7 @@ public class InvalidPathException extends RuntimeException {
 		super(createMessage(path, invalidChars, aditionalValidations));
 	}
 	
-	private static String createMessage(String path, char[] invalidChars,
-			String[] aditionalValidations) {
+	private static String createMessage(String path, char[] invalidChars, String[] aditionalValidations) {
 		StringBuilder msg = new StringBuilder();
 		msg.append("Invalid path: ").append(path);
 		

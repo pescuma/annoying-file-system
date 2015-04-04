@@ -10,14 +10,12 @@ import org.pescuma.annoyingfilesystem.Path;
 
 public class WindowsFileSystem implements FileSystem {
 	
-	public static final String[] pathValidations = new String[] {
-			"It must start with a driver leter and a :", //
+	public static final String[] pathValidations = new String[] { "It must start with a driver leter and a :", //
 			"It must have folders separated by \\", //
 			"It can not have a empty file or folder name", //
 			"The files and folders can not be named . or .." };
 	
-	public static final char[] fileNameInvalidChars = new char[] { '\\', '/', ':', '*', '?', '"',
-			'<', '>', '|' };
+	public static final char[] fileNameInvalidChars = new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
 	
 	@Override
 	public WindowsPath createPath(String path) {
@@ -78,8 +76,7 @@ public class WindowsFileSystem implements FileSystem {
 	
 	@Override
 	public String validateRoot(String name) {
-		if (name.length() < 2 || name.length() > 3 || !Character.isLetter(name.charAt(0))
-				|| name.charAt(1) != ':')
+		if (name.length() < 2 || name.length() > 3 || !Character.isLetter(name.charAt(0)) || name.charAt(1) != ':')
 			return pathValidations[0];
 		
 		if (name.length() == 3 && name.charAt(2) != '\\')
